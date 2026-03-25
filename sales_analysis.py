@@ -1,8 +1,3 @@
-# ============================================================
-# Sales Performance Analytics and Business Insights
-# Dataset: Sample - Superstore
-# Tools: Python | Pandas | Matplotlib | Seaborn
-# ============================================================
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,12 +9,7 @@ import os
 warnings.filterwarnings("ignore")
 sns.set_theme(style="whitegrid", palette="muted")
 
-# ------------------------------------------------------------------
-# SECTION 1: DATA LOADING & PREPROCESSING
-# ------------------------------------------------------------------
 
-# Locate the CSV (handles both 'Sample - Superstore.csv' and
-# 'Sample - Superstore.csv.csv' filenames)
 try:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 except NameError:
@@ -48,35 +38,27 @@ try:
 except Exception as e:
     raise RuntimeError(f"Failed to read CSV file at {csv_path}: {e}") from e
 
-# --- Basic info ---
 print("=== Dataset Overview ===")
 print(f"Shape          : {df.shape[0]} rows × {df.shape[1]} columns")
 print(f"Missing values : {df.isnull().sum().sum()}")
 print(f"Duplicate rows : {df.duplicated().sum()}\n")
 
-# Remove missing values & duplicates
 df.dropna(inplace=True)
 df.drop_duplicates(inplace=True)
 
-# Convert Order Date to datetime
 df["Order Date"] = pd.to_datetime(df["Order Date"], dayfirst=False)
 
-# Extract Month and Year for time-based analysis
 df["Year"]       = df["Order Date"].dt.year
 df["Month"]      = df["Order Date"].dt.month
 df["Month-Year"] = df["Order Date"].dt.to_period("M")
 
 print(f"Records after cleaning: {df.shape[0]} rows\n")
 
-# ------------------------------------------------------------------
-# SECTION 2: EXPLORATORY DATA ANALYSIS (EDA)
-# ------------------------------------------------------------------
 
 print("=" * 50)
 print("SECTION 2 — EXPLORATORY DATA ANALYSIS")
 print("=" * 50)
 
-# --- Key Metrics ---
 total_sales   = df["Sales"].sum()
 total_profit  = df["Profit"].sum()
 avg_profit    = df["Profit"].mean()
@@ -87,7 +69,6 @@ print(f"💰 Total Profit        : ${total_profit:,.2f}")
 print(f"📊 Average Profit      : ${avg_profit:,.2f}")
 print(f"📈 Overall Profit Margin: {profit_margin:.2f}%")
 
-# --- Sales & Profit by Category ---
 print("\n--- Sales & Profit by Category ---")
 category_summary = (
     df.groupby("Category")[["Sales", "Profit"]]
@@ -96,7 +77,6 @@ category_summary = (
 )
 print(category_summary.to_string())
 
-# --- Sales & Profit by Region ---
 print("\n--- Sales & Profit by Region ---")
 region_summary = (
     df.groupby("Region")[["Sales", "Profit"]]
@@ -105,7 +85,6 @@ region_summary = (
 )
 print(region_summary.to_string())
 
-# --- Sales & Profit by Segment ---
 print("\n--- Sales & Profit by Segment ---")
 segment_summary = (
     df.groupby("Segment")[["Sales", "Profit"]]
@@ -114,7 +93,6 @@ segment_summary = (
 )
 print(segment_summary.to_string())
 
-# --- Top 10 Products by Sales ---
 print("\n--- Top 10 Products by Sales Revenue ---")
 top10_products = (
     df.groupby("Product Name")["Sales"]
@@ -125,9 +103,6 @@ top10_products = (
 )
 print(top10_products.to_string(index=False))
 
-# ------------------------------------------------------------------
-# SECTION 3: DATA VISUALIZATION
-# ------------------------------------------------------------------
 
 print("\n\n" + "=" * 50)
 print("SECTION 3 — GENERATING VISUALIZATIONS")
@@ -135,7 +110,6 @@ print("=" * 50)
 
 CHART_DIR = BASE_DIR   # Save PNGs in the project root
 
-# ── Chart 1: Monthly Sales Trend (Line Chart) ─────────────────────
 monthly_sales = (
     df.groupby("Month-Year")["Sales"]
     .sum()
@@ -178,7 +152,6 @@ plt.savefig(out1, dpi=150)
 plt.close()
 print(f"[SAVED] {out1}")
 
-# ── Chart 2: Sales by Region (Bar Chart) ──────────────────────────
 region_plot = region_summary.reset_index().sort_values("Sales", ascending=False)
 colors_region = ["#2563EB", "#10B981", "#F59E0B", "#EF4444"]
 
@@ -202,7 +175,6 @@ plt.savefig(out2, dpi=150)
 plt.close()
 print(f"[SAVED] {out2}")
 
-# ── Chart 3: Sales & Profit by Category (Grouped Bar) ─────────────
 cat_plot = category_summary.reset_index()
 x        = range(len(cat_plot))
 width    = 0.38
@@ -230,7 +202,6 @@ plt.savefig(out3, dpi=150)
 plt.close()
 print(f"[SAVED] {out3}")
 
-# ── Chart 4: Distribution of Profit (Histogram) ───────────────────
 fig, ax = plt.subplots(figsize=(9, 5))
 ax.hist(df["Profit"], bins=50, color="#6366F1", edgecolor="white", alpha=0.85)
 ax.axvline(df["Profit"].mean(),   color="#EF4444", linestyle="--", linewidth=1.8, label=f"Mean  ${df['Profit'].mean():,.2f}")
@@ -245,7 +216,6 @@ plt.savefig(out4, dpi=150)
 plt.close()
 print(f"[SAVED] {out4}")
 
-# ── Chart 5: Correlation Heatmap ──────────────────────────────────
 corr_cols = ["Sales", "Profit", "Discount", "Quantity"]
 corr_matrix = df[corr_cols].corr()
 
@@ -270,36 +240,28 @@ plt.savefig(out5, dpi=150)
 plt.close()
 print(f"[SAVED] {out5}")
 
-# ------------------------------------------------------------------
-# SECTION 4: BUSINESS INSIGHTS
-# ------------------------------------------------------------------
 
 print("\n\n" + "=" * 50)
 print("SECTION 4 — BUSINESS INSIGHTS")
 print("=" * 50)
 
-# ── Prepare key data for insights ─────────────────────────────────
 top_category      = category_summary["Sales"].idxmax()
 low_profit_cat    = category_summary[category_summary["Profit"] < 0]
 top_region        = region_summary["Sales"].idxmax()
 low_region        = region_summary["Sales"].idxmin()
 margin_by_cat     = (category_summary["Profit"] / category_summary["Sales"] * 100).round(2)
 
-# INSIGHT 1: Technology leads all categories in revenue
 print(f"\n💡 Insight 1 — Top Revenue Category:")
 print(f"   '{top_category}' generates the highest sales revenue.")
 print(f"   Profit margin breakdown by category:")
 for cat, margin in margin_by_cat.items():
     print(f"     {cat:<20} : {margin:.2f}% margin")
 
-# INSIGHT 2: West and East dominate regional sales; South lags behind
 print(f"\n💡 Insight 2 — Regional Sales Performance:")
 print(f"   Highest sales region : {top_region}  (${region_summary.loc[top_region]['Sales']:,.0f})")
 print(f"   Lowest  sales region : {low_region}  (${region_summary.loc[low_region]['Sales']:,.0f})")
 print(f"   → Invest more in the {low_region} region to unlock untapped potential.")
 
-# INSIGHT 3: Furniture has high sales but significantly lower profit margins
-# compared to Technology — heavy discounts or logistics costs erode margins.
 furniture_margin = margin_by_cat.get("Furniture", 0)
 tech_margin      = margin_by_cat.get("Technology", 0)
 print(f"\n💡 Insight 3 — High Sales, Low Profit (Furniture vs Technology):")
@@ -307,17 +269,11 @@ print(f"   Furniture  profit margin: {furniture_margin:.2f}%")
 print(f"   Technology profit margin: {tech_margin:.2f}%")
 print(f"   → Furniture discounting strategy needs review to protect margins.")
 
-# INSIGHT 4: Discount has a strong negative correlation with Profit.
-# Reducing excessive discounts (especially in Furniture & Office Supplies)
-# could significantly improve overall profitability.
 discount_profit_corr = df[["Discount", "Profit"]].corr().iloc[0, 1]
 print(f"\n💡 Insight 4 — Discount Impact on Profit:")
 print(f"   Discount ↔ Profit correlation: {discount_profit_corr:.3f}")
 print(f"   → Higher discounts strongly reduce profit. Cap discounts at 20%.")
 
-# INSIGHT 5: Consumer segment accounts for the largest share of sales.
-# Targeting Corporate and Home Office segments with tailored promotions
-# could diversify revenue and reduce segment concentration risk.
 seg_sales_share = (segment_summary["Sales"] / segment_summary["Sales"].sum() * 100).round(2)
 top_segment     = seg_sales_share.idxmax()
 print(f"\n💡 Insight 5 — Segment Revenue Concentration:")
