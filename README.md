@@ -1,10 +1,10 @@
-# 📊 Sales Performance Analytics and Business Insights
+#  Sales Performance Analytics and Business Insights
 
 A complete Python-based data analysis project built on the **Superstore Sales Dataset**, covering data cleaning, exploratory data analysis, visualizations, and actionable business insights.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 Sales-Performance-Analytics-and-Buisness-Intelligence-/
@@ -24,7 +24,7 @@ Sales-Performance-Analytics-and-Buisness-Intelligence-/
 
 ---
 
-## ⚙️ Setup
+##  Setup
 
 ### 1. Install Dependencies
 ```bash
@@ -45,7 +45,7 @@ Open `sales_analysis.ipynb` → **Run All Cells**
 
 ---
 
-## 📋 Dataset
+##  Dataset
 
 The CSV used is `Sample - Superstore.csv.csv` (original Superstore dataset). The file contains these columns:
 
@@ -73,7 +73,7 @@ The script loads this dataset, applies cleaning, computes metrics, and builds vi
 
 ---
 
-## 📊 Visualizations Generated
+##  Visualizations Generated
 
 | # | Chart | File |
 |---|---|---|
@@ -85,7 +85,7 @@ The script loads this dataset, applies cleaning, computes metrics, and builds vi
 
 ---
 
-## 💡 Key Business Insights
+##  Key Business Insights
 
 1. **Technology** is the top-revenue category with the highest profit margins.
 2. **West** region leads in sales; **South** lags and needs investment.
@@ -95,7 +95,7 @@ The script loads this dataset, applies cleaning, computes metrics, and builds vi
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Python 3.x**
 - **Pandas** — data loading, cleaning, and exploratory analysis
@@ -104,7 +104,7 @@ The script loads this dataset, applies cleaning, computes metrics, and builds vi
 
 ---
 
-## 🧠 What's implemented (functions/workflow)
+##  What's implemented (functions/workflow)
 
 1. Data loading
    - Detect either `Sample - Superstore.csv.csv` or `Sample - Superstore.csv`
@@ -135,7 +135,7 @@ The script loads this dataset, applies cleaning, computes metrics, and builds vi
 
 ---
 
-## 🔍 How to view output
+##  How to view output
 
 - Script prints summary and insights to console
 - Charts are saved to project root as PNG files (see file list above)
